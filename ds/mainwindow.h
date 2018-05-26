@@ -18,6 +18,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    RTree my_tree;
 };
 
 #endif // MAINWINDOW_H
