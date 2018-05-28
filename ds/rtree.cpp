@@ -499,7 +499,7 @@ QVector<int> RTree::find(QVector<int> input, int dep)
 {
     QVector<int> output;
     Rect* temp = ChooseLeaf(input);
-    for (int i= 1;i < dep;i++)
+    for (int i = 0;i < dep;i++)
     {
         temp = temp->parent;
         if (temp == NULL)
@@ -531,7 +531,27 @@ void RTree::AddNode(QVector<int> &input, Rect *root)
 
 void RTree::Clear()
 {
+    DeleteNode(root);
+    root = NULL;
+}
 
+void RTree::DeleteNode(Rect *rect)
+{
+    if (rect->type == 1)
+    {
+        for (int i = 0;i < rect->rect.size();i++)
+        {
+            DeleteNode(rect->rect[i]);
+        }
+    }
+    else
+    {
+        for (int i = 0;i < rect->node.size();i++)
+        {
+            delete(rect->node[i]);
+        }
+    }
+    delete(rect);
 }
 
 

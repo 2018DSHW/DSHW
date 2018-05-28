@@ -29,11 +29,20 @@ void MainWindow::test()
     temp.push_back(1);
     my_tree.Insert(id,temp);
     id ++;
-    for (int i = 2;i < 10000;i++)
+    for (int i = 2;i < 100;i++)
     {
         temp[0] = i;
         temp[1] = i;
         my_tree.Insert(id,temp);
         id ++;
     }
+    /*QVector<int> to_find;
+    to_find.push_back(50);
+    to_find.push_back(50);
+    to_find = my_tree.find(to_find);
+    for (int i = 0;i < to_find.size();i++)
+    {
+        qDebug()<<QString::number(to_find[i])<<"\n";
+    }*/
+    my_tree.Clear();
 }

@@ -42,6 +42,7 @@ public:
 
     long long int ExtendAera(Rect* rect,QVector<int>);//计算扩展量，扩展体积比原体积
     void Clear();
+    void DeleteNode(Rect *rect);
     void update(Rect* rect);//更新最小值和最大值
     long long int Sqr(Rect* rect);//计算面积
     long long int Sqr(Rect* rect,Rect* add);//计算加入后的面积
