@@ -48,13 +48,16 @@ public:
     long long int Sqr(Rect* rect,RTreeNode* add);//计算加入后的面积
     long long int Sqr(Rect* rect,QVector<int> add);//计算加入后的面积
     long long int Sqr(QVector<int>,QVector<int>);
+
+    QVector<int> find(QVector<int> input);//返回ID的vector
+    QVector<int> find(QVector<int> input,int dep);//增加查询深度,0表示最相关，数字越大越不相关，返回空vector意为dep过大，超过根节点了或者小于0
+
+    void AddNode(QVector<int>&input,Rect* root);
 private:
     Rect* root;
     QVector<Rect*> all_rect;
     void AdjustTree(Rect* now);
     int root_cur_id;
-
-
 };
 
 #endif // RTREE_H

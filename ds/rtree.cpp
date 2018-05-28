@@ -490,3 +490,48 @@ long long int RTree::Sqr(QVector<int> mi,QVector<int> ma)
     return output;
 }
 
+QVector<int> RTree::find(QVector<int> input)
+{
+    return find(input,1);
+}
+
+QVector<int> RTree::find(QVector<int> input, int dep)
+{
+    QVector<int> output;
+    Rect* temp = ChooseLeaf(input);
+    for (int i= 1;i < dep;i++)
+    {
+        temp = temp->parent;
+        if (temp == NULL)
+        {
+            return QVector<int>(0);
+        }
+    }
+    AddNode(output,temp);
+    return output;
+}
+
+void RTree::AddNode(QVector<int> &input, Rect *root)
+{
+    if (root->type == 0)
+    {
+        for (int i= 0;i < root->node.size();i++)
+        {
+            input.push_back(root->node[i]->ID);
+        }
+    }
+    else
+    {
+        for (int i= 0;i < root->rect.size();i++)
+        {
+            AddNode(input,root->rect[i]);
+        }
+    }
+}
+
+void RTree::Clear()
+{
+
+}
+
+
