@@ -71,18 +71,41 @@ void RTree::AdjustTree(Rect *now)
             return ;
         }
 
-        int min_rank,max_rank;
+        int min_rank = -1,max_rank = -1,max_back = -1;
+        long long int min_dis1 = LONG_LONG_MAX,min_dis2 = LONG_LONG_MAX;
         for (int i = 0;i < now->node.size();i++)
         {
-            if (now->node[i]->feature == now->min)
+            long long int t1,t2;
+            t1 = Sqr(now->node[i]->feature,now->min);
+            if (t1 < min_dis1)
             {
+                min_dis1 = t1;
                 min_rank = i;
             }
-            if (now->node[i]->feature == now->max)
+            t2 = Sqr(now->node[i]->feature,now->max);
+            if (t2 <= min_dis2)
             {
+                min_dis2 = t2;
+                if (max_rank != -1)
+                {
+                    max_back = max_rank;
+                }
                 max_rank = i;
             }
         }//find seeds
+
+        if (max_rank == min_rank)
+        {
+            if (max_back != -1)
+                max_rank = max_back;
+            else
+            {
+                if (min_rank == 0)
+                    max_rank = 1;
+                else
+                    max_rank = 0;
+            }
+        }
 
         Rect    *rect1 = new Rect,*rect2 = new Rect;
 
@@ -200,18 +223,44 @@ void RTree::AdjustTree(Rect *now)
         {
             return ;
         }
-        int min_rank,max_rank;
+
+        int min_rank = -1,max_rank = -1,max_back = -1;
+        long long int min_dis1 = LONG_LONG_MAX,min_dis2 = LONG_LONG_MAX;
+
         for (int i = 0;i < now->rect.size();i++)
         {
-            if (now->rect[i]->min == now->min)
+            long long int t1,t2;
+            t1 = Sqr(now->rect[i],now->min);
+            if (t1 < min_dis1)
             {
+                min_dis1 = t1;
                 min_rank = i;
             }
-            if (now->rect[i]->max == now->max)
+
+            t2 = Sqr(now->rect[i],now->max);
+            if (t2 <= min_dis2)
             {
+                min_dis2 = t2;
+                if (max_rank != -1)
+                {
+                    max_back = max_rank;
+                }
                 max_rank = i;
             }
         }//find seeds
+        if (max_rank == min_rank)
+        {
+            if (max_back != -1)
+                max_rank = max_back;
+            else
+            {
+                if (min_rank == 0)
+                    max_rank = 1;
+                else
+                    max_rank = 0;
+            }
+        }
+
 
 
         Rect    *rect1 = new Rect,*rect2 = new Rect;
