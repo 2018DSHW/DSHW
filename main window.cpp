@@ -133,7 +133,8 @@ while(!file2.atEnd())
      QString number;
      for(int j=1;j<10;j++){
      number=str.section(",",j,j);
-      tmp[j-1] = number.toInt();
+      tmp[j-1] = number.toInt()/100;
+
      }
   //  qDebug()<< str<<"bbb";//<<tmp;
     QVector<int> temp;
@@ -160,11 +161,34 @@ void MainWindow::findsimilar(){
     //  time.start();
       QVector<int> to_find;
 
-      for(int i=0;i<500;i++)
-      to_find.push_back(50);
+      for(int i=0;i<9;i++)
+      to_find.push_back(6);
+       qDebug() <<to_find;
    //    qDebug() <<feature[present_PID];
+      int size = 5613;
+           int spl = 3;
+           qDebug()<<"size:"<<size;
+           int id = 0;
+           QVector<int> temp;
+           int featurenum = 9;
+           for (int i = 0;i < featurenum;i++)
+           {
+               temp.push_back(1);
+           }
+           my_tree.SetFeatureNum(featurenum);
+           my_tree.SetSplitNum(spl);
 
-      to_find = my_tree.find(feature[present_PID]);
+           QVector<int> find;
+  qDebug()<<feature[present_PID];
+
+           find = my_tree.find(feature[present_PID]);
+           /*
+           for (int i = 0;i < to_find.size();i++)
+           {
+               qDebug()<<QString::number(to_find[i])<<"\n";
+           }
+           qDebug()<<my_tree.access_time<<"times";
+           my_tree.Clear();*/
    /*   for (int i = 0;i < to_find.size();i++)
       {
           qDebug()<<QString::number(to_find[i])<<"\n";
@@ -185,29 +209,40 @@ void MainWindow::showresult(){
 }
 void MainWindow::test()
 {
+       int size = 1000;
+       int spl = 3;
+       qDebug()<<"size:"<<size;
+       int id = 0;
+       QVector<int> temp;
+       int featurenum = 9;
+       for (int i = 0;i < featurenum;i++)
+       {
+           temp.push_back(1);
+       }
+       my_tree.SetFeatureNum(featurenum);
+       my_tree.SetSplitNum(spl);
+       my_tree.Insert(id,temp);
+       id ++;
+       for (int i = 2;i < size;i++)
+       {
+           for(int j = 0;j < featurenum;j++)
+           {
+               temp[j] = i;
+           }
 
-    int id = 0;
-    QVector<int> temp;
-    temp.push_back(1);
-    temp.push_back(1);
-    my_tree.Insert(id,temp);
-    id ++;
-    for (int i = 2;i < 100;i++)
-    {
-        temp[0] = i;
-        temp[1] = i;
-        my_tree.Insert(id,temp);
-        id ++;
-    }
-
-    /*
-    QVector<int> to_find;
-    to_find.push_back(50);
-    to_find.push_back(50);
-    to_find = my_tree.find(to_find);
-    for (int i = 0;i < to_find.size();i++)
-    {
-        qDebug()<<QString::number(to_find[i])<<"\n";
-    }*/
-    my_tree.Clear();
+           my_tree.Insert(id,temp);
+           id ++;
+       }
+       QVector<int> to_find;
+       for (int i = 0;i < featurenum;i++)
+       {
+           to_find.push_back(50);
+       }
+       to_find = my_tree.find(to_find,2);
+       for (int i = 0;i < to_find.size();i++)
+       {
+           qDebug()<<QString::number(to_find[i])<<"\n";
+       }
+       qDebug()<<my_tree.access_time<<"times";
+       my_tree.Clear();
 }
