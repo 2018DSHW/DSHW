@@ -1,0 +1,234 @@
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include<QDebug>
+#include<QFile>
+#include<QDir>
+#include<QTime>
+
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+     loadimage();
+     result=0;
+     time =0;
+     int time=0;
+    for(int i=1;i<5611;i++){
+      findsimilar(i);
+    //  time+=.access_time;
+      caculate(i);
+    }
+      qDebug()<<"accurate rate is "<<result/5612;
+       qDebug()<<"node touch"<<time;
+
+
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+double MainWindow::yesorno(QString a,QString b){
+    int i=0;
+     a=a.replace(QString("n"), QString("_"));
+     a=a.section("_",1,1);
+     b=b.replace(QString("n"), QString("_"));
+     b=b.section("_",1,1);
+      if(a==b)return 1;
+      else return 0;
+}
+double MainWindow::caculate(int temp)
+{
+     int index=0;
+     double rate;
+     int ll;
+
+     for(int i=0;i<num_of_result;i++){
+        index+=yesorno(picture_ID[result_of_r[i]],picture_ID[temp]);
+        ll=i;
+     }
+
+     result+=(double)index/(double)num_of_result;
+
+   return result;
+}
+
+void MainWindow::loadimage()
+{
+     int i=0;
+    QFile file("/Users/imjs/imageindex/imagelist.txt");
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug()<<"Can't open the file!"<<endl;
+    }
+    while(!file.atEnd()) {
+        i++;
+        QByteArray line = file.readLine();
+        QString str(line);
+        picture_ID[i-1]=str;
+    }
+    picture_num=i;
+qDebug()<<picture_num-1;
+
+QFile file2("/Users/imjs/imageindex/color_feature.txt");
+
+if(!file2.open(QIODevice::ReadOnly | QIODevice::Text))
+{
+    qDebug()<<"Can't open the file!"<<endl;
+}
+int id = -2;
+while(!file2.atEnd())
+{
+     QByteArray line = file2.readLine();
+     int tmp[9];
+     QString str(line);
+     str=str.replace(QString("rect"), QString(""));
+     str=str.replace(QString(" "), QString(","));
+     QString number;
+     for(int j=1;j<10;j++){
+     number=str.section(",",j,j);
+      tmp[j-1] = number.toInt()/100;
+
+     }
+  //asdfasdf
+
+
+
+          //asdfsdf
+  //  qDebug()<< str<<"bbb";//<<tmp;
+  /* QVector<int> temp;
+     for(int i=0;i<9;i++){
+    temp.push_back(tmp[i]);
+    if(id>=0)
+    feature[id].push_back(tmp[i]);
+     }
+     if(id>=0)
+    my_tree.Insert(id,temp);
+  // qDebug()<< "id:"<<id;
+   //qDebug()<< temp;
+   id++;*/
+}
+
+QFile file3("/Users/imjs/imageindex/ColorHistogram.txt");
+
+if(!file3.open(QIODevice::ReadOnly | QIODevice::Text))
+{
+    qDebug()<<"Can't open the file!"<<endl;
+}
+while(!file3.atEnd())
+{    QString lolo(" ");
+    QByteArray line = file3.readLine();
+     double tmp[12];
+     int sarang[12];
+     QString str(line);
+     str=str.replace(QString("("), QString(","));
+     str=str.replace(QString(" "), QString(","));
+     str=str.replace(QString(")"), QString(" "));
+     QString number;
+   //  QVector<QVector<double>>  last;
+
+     for(int j=1;j<13;j++){
+     number=str.section(",",j,j);
+      tmp[j-1] = number.toDouble();
+     }
+
+     double big=-1;
+     for(int ii=0;ii<12;ii++){
+         for(int jj=0;jj<12;jj++){
+             if(big<tmp[jj])
+                 big=tmp[jj];
+         }
+     }
+
+     for(int k=0;k<12;k++){
+         sarang[k]=(tmp[k]/big)*64.0;
+         lolo.append(QString::number(sarang[k], 10));
+         lolo.append(",");
+     }
+
+    // qDebug()<<str<<"big "<<big;//<<tmp;
+        QVector<int> temp;
+         for(int i=0;i<12;i++){
+        temp.push_back(tmp[i]);
+        if(id>=0)
+        feature[id].push_back(tmp[i]);
+         }
+         if(id>=0)
+        my_tree.Insert(id,temp);
+      // qDebug()<< "id:"<<id;
+       //qDebug()<< temp;
+       id++;
+}
+
+
+
+
+}
+//从这里开始就可以@sasa@xiao
+void MainWindow::findsimilar(int go){
+
+           int size = 5613;
+           int spl = 9;
+
+           int id = 0;
+           QVector<int> temp;
+           int featurenum = 9;
+           for (int i = 0;i < featurenum;i++)
+           {
+               temp.push_back(1);
+           }
+           my_tree.SetFeatureNum(featurenum);
+           my_tree.SetSplitNum(spl);
+
+           QVector<int> find;
+           find = my_tree.find(feature[go],0);
+
+           num_of_result=find.size();
+           for(int i=0;i<num_of_result;i++){
+               result_of_r[i]=find[i];
+           }
+
+
+
+}
+
+void MainWindow::test()
+{
+       int size = 1000;
+       int spl = 3;
+       qDebug()<<"size:"<<size;
+       int id = 0;
+       QVector<int> temp;
+       int featurenum = 9;
+       for (int i = 0;i < featurenum;i++)
+       {
+           temp.push_back(1);
+       }
+       my_tree.SetFeatureNum(featurenum);
+       my_tree.SetSplitNum(spl);
+       my_tree.Insert(id,temp);
+       id ++;
+       for (int i = 2;i < size;i++)
+       {
+           for(int j = 0;j < featurenum;j++)
+           {
+               temp[j] = i;
+           }
+
+           my_tree.Insert(id,temp);
+           id ++;
+       }
+       QVector<int> to_find;
+       for (int i = 0;i < featurenum;i++)
+       {
+           to_find.push_back(50);
+       }
+       to_find = my_tree.find(to_find,2);
+       for (int i = 0;i < to_find.size();i++)
+       {
+           qDebug()<<QString::number(to_find[i])<<"\n";
+       }
+       qDebug()<<my_tree.access_time<<"times";
+       my_tree.Clear();
+}
