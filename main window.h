@@ -6,6 +6,7 @@
 #include<Qpainter>
 #include<QPixmap>
 #include<QDial>
+#include "rtree.h"
 namespace Ui {
 class MainWindow;
 }
@@ -36,9 +37,12 @@ public:
     void loadimage();
     void showresult();
     void findsimilar();
+     void test();
 
 private:
     Ui::MainWindow *ui;
+     RTree my_tree;
+     QVector<int> feature[5700];
 };
 
 #endif // MAINWINDOW_H
