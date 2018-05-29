@@ -62,7 +62,6 @@ int RTree::Insert(const int ID,QVector<int> feature)
     }
 }
 
-
 void RTree::AdjustTree(Rect *now)
 {
     if (now->type == false)
@@ -329,19 +328,6 @@ void RTree::AdjustTree(Rect *now)
         }
         delete(now);
     }
-}
-
-bool RTree::Contain(Rect *out, QVector<int> feature)
-{
-    for (int i = 0;i < FEATURE_NUM;i++)
-    {
-        if (feature[i] >= out->min[i] && feature[i] <= out->max[i])
-        {
-            continue;
-        }
-        return false;
-    }
-    return true;
 }
 
 long long int RTree::ExtendAera(Rect *rect, QVector<int> add)

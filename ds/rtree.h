@@ -35,7 +35,6 @@ public:
     int Insert(const int ID,QVector<int> feature);
     Rect* Search();
     Rect* ChooseLeaf(QVector<int> feature);
-    bool Contain(Rect* out,QVector<int> feature);
     bool CompSqre(Rect* out1,Rect* out2);//返回值：S out1 < S out 2 ?
 
     long long int ExtendAera(Rect* rect,QVector<int>);//计算扩展量，扩展体积比原体积

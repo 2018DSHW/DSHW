@@ -41,14 +41,15 @@ void MainWindow::test()
     {
         for(int j = 0;j < featurenum;j++)
         {
-            temp[j] = i;
+            temp[j] = 2 * i;
         }
+
 
         my_tree.Insert(id,temp);
         qDebug()<<id<<"\n";
-        if (id == 659)
+        if(id == 568)
         {
-            int a=0;
+            int a = 0;
         }
         id ++;
     }
