@@ -45,6 +45,11 @@ void MainWindow::test()
         }
 
         my_tree.Insert(id,temp);
+        qDebug()<<id<<"\n";
+        if (id == 659)
+        {
+            int a=0;
+        }
         id ++;
     }
     QVector<int> to_find;

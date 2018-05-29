@@ -113,7 +113,11 @@ void RTree::AdjustTree(Rect *now)
                     continue;
                 }
 
-                int a = abs(Sqr(rect1,now->node[j]) - Sqr(rect2,now->node[j]));
+                long long int a = Sqr(rect1,now->node[j]) - Sqr(rect2,now->node[j]);
+                if (a <  0)
+                {
+                    a *= -1;
+                }
                 if (max < a)
                 {
                     max = a;
