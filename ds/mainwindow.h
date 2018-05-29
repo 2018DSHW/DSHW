@@ -19,7 +19,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    RTree* my_tree;
+    RTree my_tree;
 };
 
 #endif // MAINWINDOW_H

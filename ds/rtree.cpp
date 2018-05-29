@@ -43,10 +43,7 @@ int RTree::Insert(const int ID,QVector<int> feature)
         root->ID = root_cur_id;
         temp->rectID = root_cur_id;
         root_cur_id++;
-        for (int i = 0;i < FEATURE_NUM;i++)
-        {
-            root->min[i] = root->max[i] = feature[i];
-        }
+        root->min = root->max =feature;
         root->node.push_back(temp);
 
 
@@ -286,11 +283,12 @@ void RTree::AdjustTree(Rect *now)
             rect1->parent = rect2->parent = root;
             root->ID = root_cur_id;
             root_cur_id ++;
-
+            root->max.clear();
+            root->min.clear();
             for (int i = 0;i < FEATURE_NUM;i++)
             {
-                root->min[i] = rect1->min[i] < rect2->min[i] ?rect1->min[i] : rect2->min[i];
-                root->max[i] = rect1->max[i] > rect2->max[i] ?rect1->max[i] : rect2->max[i];
+                root->min.push_back(rect1->min[i] < rect2->min[i] ?rect1->min[i] : rect2->min[i]);
+                root->max.push_back(rect1->max[i] > rect2->max[i] ?rect1->max[i] : rect2->max[i]);
             }
             all_rect.push_back(root);
         }
@@ -359,7 +357,6 @@ Rect* RTree::ChooseLeaf(QVector<int> feature)
     access_time++;
     while(true)
     {
-
         if (result->type == false)
             return result;
         Rect* temp = NULL;
@@ -514,7 +511,7 @@ long long int RTree::Sqr(QVector<int> mi,QVector<int> ma)
 
 QVector<int> RTree::find(QVector<int> input)
 {
-    return find(input,1);
+    return find(input,0);
 }
 
 QVector<int> RTree::find(QVector<int> input, int dep)

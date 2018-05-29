@@ -17,9 +17,8 @@ typedef struct Rect
     Rect* parent;
     int ID;
     bool type;//0表示叶子节点，1表示非叶子节点
-    QVector<int> min = QVector<int>(FEATURE_NUM);
-    QVector<int> max = QVector<int>(FEATURE_NUM);
-
+    QVector<int> min;
+    QVector<int> max;
     QVector<Rect*> rect;//指向Rect的指针
     QVector<RTreeNode*> node;
 
@@ -32,7 +31,7 @@ public:
     RTree();
 
     bool SetFeatureNum(int);//设置维数，默认值为2，返回0false表示失败
-    bool SetSplitNum();//设置分裂数，返回false表示失败
+    bool SetSplitNum(int);//设置分裂数，返回false表示失败
     int Insert(const int ID,QVector<int> feature);
     Rect* Search();
     Rect* ChooseLeaf(QVector<int> feature);
