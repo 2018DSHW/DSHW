@@ -4,7 +4,7 @@ RTree::RTree()
 {
     root = NULL;
     root_cur_id = 0;
-    FEATURE_NUM = 2;
+    FEATURE_NUM = 9;
     MAX_SPLIT_NUM = 15;
 
 }
@@ -70,42 +70,20 @@ void RTree::AdjustTree(Rect *now)
         {
             return ;
         }
-
-        int min_rank = -1,max_rank = -1,max_back = -1;
-        long long int min_dis1 = LONG_LONG_MAX,min_dis2 = LONG_LONG_MAX;
+        int min_rank,max_rank;
+        long long int max_mbr = 0;
         for (int i = 0;i < now->node.size();i++)
         {
-            long long int t1,t2;
-            t1 = Sqr(now->node[i]->feature,now->min);
-            if (t1 < min_dis1)
+            for (int j = i + 1;j < now->node.size();j++)
             {
-                min_dis1 = t1;
-                min_rank = i;
-            }
-            t2 = Sqr(now->node[i]->feature,now->max);
-            if (t2 <= min_dis2)
-            {
-                min_dis2 = t2;
-                if (max_rank != -1)
+                if (Sqr(now->node[i]->feature,now->node[j]->feature) > max_mbr)
                 {
-                    max_back = max_rank;
+                    min_rank = i;
+                    max_rank = j;
+                    max_mbr = Sqr(now->node[i]->feature,now->node[j]->feature);
                 }
-                max_rank = i;
             }
         }//find seeds
-
-        if (max_rank == min_rank)
-        {
-            if (max_back != -1)
-                max_rank = max_back;
-            else
-            {
-                if (min_rank == 0)
-                    max_rank = 1;
-                else
-                    max_rank = 0;
-            }
-        }
 
         Rect    *rect1 = new Rect,*rect2 = new Rect;
 
@@ -127,7 +105,8 @@ void RTree::AdjustTree(Rect *now)
         stat[min_rank] = stat[max_rank] = true;
         for (int i = 0;i < now->node.size() - 2;i++)
         {
-            int choose,max = -1;
+            int choose;
+            long long int max = -1;
             for (int j = 0;j < now->node.size();j++)
             {
                 if (stat[j] == true)
@@ -224,43 +203,20 @@ void RTree::AdjustTree(Rect *now)
             return ;
         }
 
-        int min_rank = -1,max_rank = -1,max_back = -1;
-        long long int min_dis1 = LONG_LONG_MAX,min_dis2 = LONG_LONG_MAX;
-
+        int min_rank,max_rank;
+        long long int max_mbr = 0;
         for (int i = 0;i < now->rect.size();i++)
         {
-            long long int t1,t2;
-            t1 = Sqr(now->rect[i],now->min);
-            if (t1 < min_dis1)
+            for (int j = i + 1;j < now->rect.size();j++)
             {
-                min_dis1 = t1;
-                min_rank = i;
-            }
-
-            t2 = Sqr(now->rect[i],now->max);
-            if (t2 <= min_dis2)
-            {
-                min_dis2 = t2;
-                if (max_rank != -1)
+                if (Sqr(now->rect[i],now->rect[j]) > max_mbr)
                 {
-                    max_back = max_rank;
+                    min_rank = i;
+                    max_rank = j;
+                    max_mbr = Sqr(now->rect[i],now->rect[j]);
                 }
-                max_rank = i;
-            }
-        }//find seeds
-        if (max_rank == min_rank)
-        {
-            if (max_back != -1)
-                max_rank = max_back;
-            else
-            {
-                if (min_rank == 0)
-                    max_rank = 1;
-                else
-                    max_rank = 0;
             }
         }
-
 
 
         Rect    *rect1 = new Rect,*rect2 = new Rect;
@@ -282,14 +238,19 @@ void RTree::AdjustTree(Rect *now)
         stat[min_rank] = stat[max_rank] = true;
         for (int i = 0;i < now->rect.size() - 2;i++)
         {
-            int choose,max = -1;
+            int choose;
+            long long int max = -1;
             for (int j = 0;j < now->rect.size();j++)
             {
                 if (stat[j] == true)
                 {
                     continue;
                 }
-                int a = abs(Sqr(rect1,now->rect[j]) - Sqr(rect2,now->rect[j]));
+                long long int a = Sqr(rect1,now->rect[j]) - Sqr(rect2,now->rect[j]);
+                if (a < 0)
+                {
+                    a *= -1;
+                }
                 if (max < a)
                 {
                     max = a;

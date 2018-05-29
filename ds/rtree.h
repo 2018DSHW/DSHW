@@ -2,7 +2,7 @@
 #define RTREE_H
 #include <QVector>
 #include <QString>
-
+#include <QDebug>
 
 typedef struct RTreeNode
 {

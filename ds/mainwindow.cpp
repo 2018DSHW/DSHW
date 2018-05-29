@@ -43,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
    // 加载图片，即提取txt中的文件名到pictureid
     present_PID=0;// 当前正在展示的（最大的）图片的ID
     QString temp = picture_ID[present_PID].left(picture_ID[present_PID].length()-1);
-    QString loadpic= "QPushButton{border-image:url(/Users/imjs/imageindex/image/"+temp+");}";
+    QString loadpic= "QPushButton{border-image:url(:/image/"+temp+");}";
     picture->setStyleSheet(loadpic);
     //图片展示
     dl= new QDial(this);
@@ -71,8 +71,8 @@ void MainWindow::nextp()
     if(present_PID<picture_num-1)
     present_PID++;
     QString temp = picture_ID[present_PID].left(picture_ID[present_PID].length()-1);
-     QString loadpic= "QPushButton{border-image:url(/Users/imjs/imageindex/image/"+temp+");}";
-    picture->setStyleSheet(loadpic);
+     QString loadpic= "QPushButton{border-image:url(:/image/"+temp+");}";
+     picture->setStyleSheet(loadpic);
      qDebug()<<present_PID;
 
 }
@@ -80,7 +80,7 @@ void MainWindow::beforep(){
     if(present_PID>0)
     present_PID--;
     QString temp = picture_ID[present_PID].left(picture_ID[present_PID].length()-1);
-     QString loadpic= "QPushButton{border-image:url(/Users/imjs/imageindex/image/"+temp+");}";
+     QString loadpic= "QPushButton{border-image:url(:/image/"+temp+");}";
     picture->setStyleSheet(loadpic);
      qDebug()<<present_PID;
 }
@@ -88,7 +88,7 @@ void MainWindow::beforep(){
 void MainWindow::change(int a){
         present_PID=a;
    QString temp = picture_ID[present_PID].left(picture_ID[present_PID].length()-1);
-     QString loadpic= "QPushButton{border-image:url(/Users/imjs/imageindex/image/"+temp+");}";
+     QString loadpic= "QPushButton{border-image:url(:/image/"+temp+");}";
     picture->setStyleSheet(loadpic);
     qDebug()<<present_PID;
 }
@@ -145,8 +145,8 @@ while(!file2.atEnd())
      }
      if(id>=0)
     my_tree.Insert(id,temp);
-   qDebug()<< "id:"<<id;
-   qDebug()<< temp;
+  // qDebug()<< "id:"<<id;
+   //qDebug()<< temp;
    id++;
 }
 
@@ -166,7 +166,7 @@ void MainWindow::findsimilar(){
        qDebug() <<to_find;
    //    qDebug() <<feature[present_PID];
       int size = 5613;
-           int spl = 3;
+           int spl = 9;
            qDebug()<<"size:"<<size;
            int id = 0;
            QVector<int> temp;
@@ -181,14 +181,26 @@ void MainWindow::findsimilar(){
            QVector<int> find;
   qDebug()<<feature[present_PID];
 
-           find = my_tree.find(feature[present_PID]);
-           /*
-           for (int i = 0;i < to_find.size();i++)
+           find = my_tree.find(feature[700],1);
+
+           qDebug()<<"find:"<<feature[700];
+           for (int i = 0;i < find.size();i++)
            {
-               qDebug()<<QString::number(to_find[i])<<"\n";
+               qDebug()<<"id:"<<find[i]<<feature[find[i]]<<"\n";
            }
+           qDebug()<<find.size()<<"all";
+           int count1 = 0;
+           for (int i = 0;i < find.size();i++)
+           {
+               if (find[i] < 1133 && find[i] > 503)
+               {
+                   count1 ++;
+               }
+           }
+           qDebug()<<count1<<"right";
+
            qDebug()<<my_tree.access_time<<"times";
-           my_tree.Clear();*/
+           /*my_tree.Clear();*/
    /*   for (int i = 0;i < to_find.size();i++)
       {
           qDebug()<<QString::number(to_find[i])<<"\n";
@@ -203,7 +215,7 @@ void MainWindow::showresult(){
 
    for(int i=0;i<num_of_result;i++){
     QString temp = picture_ID[result_of_r[i]].left(picture_ID[result_of_r[i]].length()-1);
-     QString loadpic= "QPushButton{border-image:url(/Users/imjs/imageindex/image/"+temp+");}";
+     QString loadpic= "QPushButton{border-image:url(:/image/image/"+temp+");}";
     result[i]->setStyleSheet(loadpic);
    }
 }

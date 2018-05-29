@@ -3,4 +3,5 @@
         <file alias="image">imagelist.txt</file>
         <file alias="feature">color_feature.txt</file>
     </qresource>
+    <qresource prefix="/image"/>
 </RCC>
