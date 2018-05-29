@@ -3,6 +3,7 @@
 #include<QDebug>
 #include<QFile>
 #include<QDir>
+#include<QTime>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -40,13 +41,13 @@ MainWindow::MainWindow(QWidget *parent) :
   //各个button定义
     loadimage();
    // 加载图片，即提取txt中的文件名到pictureid
-    present_PID=1;// 当前正在展示的（最大的）图片的ID
+    present_PID=0;// 当前正在展示的（最大的）图片的ID
     QString temp = picture_ID[present_PID].left(picture_ID[present_PID].length()-1);
     QString loadpic= "QPushButton{border-image:url(/Users/imjs/imageindex/image/"+temp+");}";
     picture->setStyleSheet(loadpic);
     //图片展示
     dl= new QDial(this);
-    dl->setRange(1,picture_num);
+    dl->setRange(0,picture_num-1);
     // 用next before button 进行小调，dial进行大调
 
     dl->setGeometry(550,70,200,200);
@@ -54,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(before,SIGNAL(clicked(bool)),this,SLOT(beforep()));//before 选择上一个图
     connect(find,SIGNAL(clicked(bool)),this,SLOT(findsimilar()));//开始计算     @xiao@sasa 你们要在这里添加你的函数
     connect(dl,SIGNAL(valueChanged(int)),this,SLOT(change(int)));//选择图片
+
 
 
 }
@@ -66,19 +68,21 @@ MainWindow::~MainWindow()
 //选择图片
 void MainWindow::nextp()
 {
-    if(present_PID<picture_num)
+    if(present_PID<picture_num-1)
     present_PID++;
     QString temp = picture_ID[present_PID].left(picture_ID[present_PID].length()-1);
      QString loadpic= "QPushButton{border-image:url(/Users/imjs/imageindex/image/"+temp+");}";
     picture->setStyleSheet(loadpic);
+     qDebug()<<present_PID;
 
 }
 void MainWindow::beforep(){
-    if(present_PID>2)
+    if(present_PID>0)
     present_PID--;
     QString temp = picture_ID[present_PID].left(picture_ID[present_PID].length()-1);
      QString loadpic= "QPushButton{border-image:url(/Users/imjs/imageindex/image/"+temp+");}";
     picture->setStyleSheet(loadpic);
+     qDebug()<<present_PID;
 }
 
 void MainWindow::change(int a){
@@ -108,25 +112,67 @@ void MainWindow::loadimage()
         i++;
         QByteArray line = file.readLine();
         QString str(line);
-        picture_ID[i]=str;
+        picture_ID[i-1]=str;
     }
     picture_num=i;
-qDebug()<<picture_num;
+qDebug()<<picture_num-1;
+
+QFile file2("/Users/imjs/imageindex/color_feature.txt");
+if(!file2.open(QIODevice::ReadOnly | QIODevice::Text))
+{
+    qDebug()<<"Can't open the file!"<<endl;
+}
+int id = -2;
+while(!file2.atEnd())
+{
+    QByteArray line = file2.readLine();
+     int tmp[9];
+     QString str(line);
+     str=str.replace(QString("rect"), QString(""));
+     str=str.replace(QString(" "), QString(","));
+     QString number;
+     for(int j=1;j<10;j++){
+     number=str.section(",",j,j);
+      tmp[j-1] = number.toInt();
+     }
+  //  qDebug()<< str<<"bbb";//<<tmp;
+    QVector<int> temp;
+     for(int i=0;i<9;i++){
+    temp.push_back(tmp[i]);
+    if(id>=0)
+    feature[id].push_back(tmp[i]);
+     }
+     if(id>=0)
+    my_tree.Insert(id,temp);
+   qDebug()<< "id:"<<id;
+   qDebug()<< temp;
+   id++;
+}
+
+
+
+
+
 }
 //从这里开始就可以@sasa@xiao
 void MainWindow::findsimilar(){
+  //  QTime time;
+    //  time.start();
+      QVector<int> to_find;
 
+      for(int i=0;i<500;i++)
+      to_find.push_back(50);
+   //    qDebug() <<feature[present_PID];
 
-
-
-
-
-
-
-
+      to_find = my_tree.find(feature[present_PID]);
+   /*   for (int i = 0;i < to_find.size();i++)
+      {
+          qDebug()<<QString::number(to_find[i])<<"\n";
+      }*/
+ //     qDebug() << time.elapsed() / 1000.0 << "s";
    //  num_of_result= ?
    //   result_of_r[i]=?;
-  showresult();
+//  showresult();
 }
 //显示
 void MainWindow::showresult(){
@@ -137,4 +183,31 @@ void MainWindow::showresult(){
     result[i]->setStyleSheet(loadpic);
    }
 }
+void MainWindow::test()
+{
 
+    int id = 0;
+    QVector<int> temp;
+    temp.push_back(1);
+    temp.push_back(1);
+    my_tree.Insert(id,temp);
+    id ++;
+    for (int i = 2;i < 100;i++)
+    {
+        temp[0] = i;
+        temp[1] = i;
+        my_tree.Insert(id,temp);
+        id ++;
+    }
+
+    /*
+    QVector<int> to_find;
+    to_find.push_back(50);
+    to_find.push_back(50);
+    to_find = my_tree.find(to_find);
+    for (int i = 0;i < to_find.size();i++)
+    {
+        qDebug()<<QString::number(to_find[i])<<"\n";
+    }*/
+    my_tree.Clear();
+}
