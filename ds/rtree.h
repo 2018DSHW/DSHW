@@ -3,8 +3,8 @@
 #include <QVector>
 #include <QString>
 
-#define FEATURE_NUM 2
-#define MAX_SPLIT_NUM 3
+
+
 
 
 typedef struct RTreeNode
@@ -33,6 +33,8 @@ class RTree
 {
 public:
     RTree();
+    RTree(int);//split num
+    RTree(int,int);//feature num 和 split num
 
     int Insert(const int ID,QVector<int> feature);
     Rect* Search();
@@ -54,11 +56,14 @@ public:
     QVector<int> find(QVector<int> input,int dep);//增加查询深度,0表示最相关，数字越大越不相关，返回空vector意为dep过大，超过根节点了或者小于0
 
     void AddNode(QVector<int>&input,Rect* root);
+    int access_time;
 private:
     Rect* root;
     QVector<Rect*> all_rect;
     void AdjustTree(Rect* now);
     int root_cur_id;
+    int FEATURE_NUM;
+    int MAX_SPLIT_NUM;
 };
 
 #endif // RTREE_H

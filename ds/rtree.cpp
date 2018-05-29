@@ -4,6 +4,26 @@ RTree::RTree()
 {
     root = NULL;
     root_cur_id = 0;
+    FEATURE_NUM = 2;
+    MAX_SPLIT_NUM = 15;
+
+}
+
+RTree::RTree(int i)
+{
+    root = NULL;
+    root_cur_id = 0;
+    FEATURE_NUM = i;
+    MAX_SPLIT_NUM = 15;
+}
+
+
+RTree::RTree(int i,int j)
+{
+    root = NULL;
+    root_cur_id = 0;
+    FEATURE_NUM = i;
+    MAX_SPLIT_NUM = j;
 }
 
 int RTree::Insert(const int ID,QVector<int> feature)
@@ -337,12 +357,15 @@ Rect* RTree::ChooseLeaf(QVector<int> feature)
 {
     Rect* result;
     result = root;
+    access_time++;
     while(true)
     {
+
         if (result->type == false)
             return result;
         Rect* temp = NULL;
         long long int min_extend = LONG_LONG_MAX;
+        access_time += result->rect.size();
         for (int i= 0;i < result->rect.size();i++)
         {
             long long int a = ExtendAera(result->rect[i],feature);
@@ -497,10 +520,12 @@ QVector<int> RTree::find(QVector<int> input)
 
 QVector<int> RTree::find(QVector<int> input, int dep)
 {
+    access_time = 0;
     QVector<int> output;
     Rect* temp = ChooseLeaf(input);
     for (int i = 0;i < dep;i++)
     {
+        access_time++;
         temp = temp->parent;
         if (temp == NULL)
         {
@@ -513,9 +538,10 @@ QVector<int> RTree::find(QVector<int> input, int dep)
 
 void RTree::AddNode(QVector<int> &input, Rect *root)
 {
+    access_time++;
     if (root->type == 0)
     {
-        for (int i= 0;i < root->node.size();i++)
+        for (int i= 0;i < root->node.size();i++)            
         {
             input.push_back(root->node[i]->ID);
         }
