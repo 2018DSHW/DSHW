@@ -9,21 +9,20 @@ RTree::RTree()
 
 }
 
-RTree::RTree(int i)
+bool RTree::SetFeatureNum(int i)
 {
-    root = NULL;
-    root_cur_id = 0;
+    if (root != NULL)
+        return false;
     FEATURE_NUM = i;
-    MAX_SPLIT_NUM = 15;
+    return true;
 }
 
-
-RTree::RTree(int i,int j)
+bool RTree::SetSplitNum( int i )
 {
-    root = NULL;
-    root_cur_id = 0;
-    FEATURE_NUM = i;
-    MAX_SPLIT_NUM = j;
+    if (root != NULL)
+        return false;
+    MAX_SPLIT_NUM = i;
+    return true;
 }
 
 int RTree::Insert(const int ID,QVector<int> feature)

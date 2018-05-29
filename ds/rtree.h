@@ -4,9 +4,6 @@
 #include <QString>
 
 
-
-
-
 typedef struct RTreeNode
 {
     int ID;//从零开始
@@ -33,9 +30,9 @@ class RTree
 {
 public:
     RTree();
-    RTree(int);//split num
-    RTree(int,int);//feature num 和 split num
 
+    bool SetFeatureNum(int);//设置维数，默认值为2，返回0false表示失败
+    bool SetSplitNum();//设置分裂数，返回false表示失败
     int Insert(const int ID,QVector<int> feature);
     Rect* Search();
     Rect* ChooseLeaf(QVector<int> feature);
